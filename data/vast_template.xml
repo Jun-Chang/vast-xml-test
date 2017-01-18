@@ -1,0 +1,55 @@
+<VAST version="{{ .Version }}">
+    {{range $_, $ad := .Ads}}
+    <Ad>
+        {{ $inLine := $ad.InLine}}
+        <InLine>
+            <AdSystem version="{{ $inLine.AdSystem.Version}}">{{ $inLine.AdSystem.Name}}</AdSystem>
+            <AdTitle>{{ $inLine.AdTitle }}</AdTitle>
+            <Impression id="{ $inLine.Impression.ID }}">
+                <![CDATA[{{ $inLine.Impression.URI }}]]>
+            </Impression>
+            <Description>{{ $inLine.Description }}</Description>
+            <Error>
+                <![CDATA[{{ $inLine.Error.Text }}]]>
+            </Error>
+            <Extensions></Extensions>
+            <Creatives>
+                {{range $_, $creative := $inLine.Creatives}}
+                <Creative>
+                    {{ $linear := $creative.Linear }}
+                    {{ $videoClicks := $linear.VideoClicks }}
+                    <Linear>
+                        <Duration>{{ $linear.Duration }}</Duration>
+                        {{range $_, $mediaFile := $linear.MediaFiles}}
+                        <MediaFiles>
+                            <MediaFile id="{{ $mediaFile.ID }}" delivery="{{ $mediaFile.Delivery }}" type="{{ $mediaFile.Type }}" width="{{ $mediaFile.Width }}" height="{{ $mediaFile.Height }}">
+                                <![CDATA[{{ $mediaFile.URI }}]]>
+                            </MediaFile>
+                        </MediaFiles>
+                        {{end}}
+                        <VideoClicks>
+                            <ClickThrough id="{{ $videoClicks.ClickThrough.ID }}">
+                                <![CDATA[{{ $videoClicks.ClickThrough.URI }}]]>
+                            </ClickThrough>
+                            <ClickTracking id="{{ $videoClicks.ClickTracking.ID }}">
+                                <![CDATA[{{ $videoClicks.ClickTracking.URI }}]]>
+                            </ClickTracking>
+                            <CustomClick id="{{ $videoClicks.CustomClick.ID }}">
+                                <![CDATA[{{ $videoClicks.CustomClick.URI }}]]>
+                            </CustomClick>
+                        </VideoClicks>
+                        <TrackingEvents>
+                            {{range $_, $tracking := $linear.TrackingEvents}}
+                            <Tracking event="{{ $tracking.Event }}">
+                                <![CDATA[{{ $tracking.URI }}]]>
+                            </Tracking>
+                            {{end}}
+                        </TrackingEvents>
+                    </Linear>
+                </Creative>
+                {{end}}
+            </Creatives>
+        </InLine>
+    </Ad>
+    {{end}}
+</VAST>

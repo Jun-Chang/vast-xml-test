@@ -1,0 +1,60 @@
+{% import v "github.com/Jun-Chang/vast-xml-test/vast" %}
+{% stripspace %}
+{% func XMLFromQuickTemplate(vast *v.Vast) %}
+<VAST version="{%s vast.Version %}">
+    {% for _, ad := range vast.Ads %}
+    <Ad>
+        {% code inLine := ad.InLine %}
+        <InLine>
+            <AdSystem version="{%s inLine.AdSystem.Version %}">{%s inLine.AdSystem.Name %}</AdSystem>
+            <AdTitle>{%s inLine.AdTitle %}</AdTitle>
+            <Impression id="{%s inLine.Impression.ID %}">
+                <![CDATA[{%s inLine.Impression.URI %}]]>
+            </Impression>
+            <Description>{%s inLine.Description %}</Description>
+            <Error>
+                <![CDATA[{%s inLine.Error.Text %}]]>
+            </Error>
+            <Extensions></Extensions>
+            <Creatives>
+                {% for _, creative := range inLine.Creatives %}
+                <Creative>
+                    {% code linear := creative.Linear %}
+                    {% code videoClicks := linear.VideoClicks %}
+                    <Linear>
+                        <Duration>{%s linear.Duration %}</Duration>
+                        {% for _, mediaFile := range linear.MediaFiles %}
+                        <MediaFiles>
+                            <MediaFile id="{%s mediaFile.ID %}" delivery="{%s mediaFile.Delivery %}" type="{%s mediaFile.Type %}" width="{%d mediaFile.Width %}" height="{%d mediaFile.Height %}">
+                                <![CDATA[{%s mediaFile.URI %}]]>
+                            </MediaFile>
+                        </MediaFiles>
+                        {% endfor %}
+                        <VideoClicks>
+                            <ClickThrough id="{%s videoClicks.ClickThrough.ID %}">
+                                <![CDATA[{%s videoClicks.ClickThrough.URI %}]]>
+                            </ClickThrough>
+                            <ClickTracking id="{%s videoClicks.ClickTracking.ID %}">
+                                <![CDATA[{%s videoClicks.ClickTracking.URI %}]]>
+                            </ClickTracking>
+                            <CustomClick id="{%s videoClicks.CustomClick.ID %}">
+                                <![CDATA[{%s videoClicks.CustomClick.URI %}]]>
+                            </CustomClick>
+                        </VideoClicks>
+                        <TrackingEvents>
+                            {% for _, tracking := range linear.TrackingEvents %}
+                            <Tracking event="{%s tracking.Event %}">
+                                <![CDATA[{%s tracking.URI %}]]>
+                            </Tracking>
+                            {% endfor %}
+                        </TrackingEvents>
+                    </Linear>
+                </Creative>
+                {% endfor %}
+            </Creatives>
+        </InLine>
+    </Ad>
+    {% endfor %}
+</VAST>
+{% endfunc %}
+{% endstripspace %}
